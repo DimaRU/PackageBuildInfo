@@ -52,28 +52,14 @@ struct MyPlugin: BuildToolPlugin {
 
         let outputFile = context.pluginWorkDirectory.appending("buildInfo.swift")
 
-        let command: PackagePlugin.Command
-        let (exitCode, output) = try runGit(command: "git status --porcelain -uno")
-        if exitCode == 0, output.isEmpty {
-            command = .prebuildCommand(
-                displayName:
-                    "Generating \(Date()) \(outputFile.lastComponent) for \(target.directory)",
-                executable:
-                    try context.tool(named: "BuildInfo").path,
-                arguments: [ "\(target.directory)", "\(outputFile)", "\(Date())" ],
-                outputFilesDirectory: context.pluginWorkDirectory
-            )
-        } else {
-            command = .buildCommand(
-                displayName:
-                    "Generating \(Date()) \(outputFile.lastComponent) for dirty \(target.directory)",
-                executable:
-                    try context.tool(named: "BuildInfo").path,
-                arguments: [ "\(target.directory)", "\(outputFile)", "\(Date())" ],
-                inputFiles: target.sourceFiles.map{ $0.path },
-                outputFiles: [ outputFile ]
-            )
-        }
+        let command: PackagePlugin.Command = .prebuildCommand(
+            displayName:
+                "Generating \(Date()) \(outputFile.lastComponent) for \(target.directory)",
+            executable:
+                try context.tool(named: "BuildInfo").path,
+            arguments: [ "\(target.directory)", "\(outputFile)", "\(Date())" ],
+            outputFilesDirectory: context.pluginWorkDirectory
+        )
         return [command]
     }
 }
