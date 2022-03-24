@@ -2,18 +2,18 @@
 import PackageDescription
 
 let package = Package(
-    name: "BuildInfo",
+    name: "PackageBuildInfo",
     platforms: [.macOS(.v11)],
     products: [
-        .plugin(name: "BuildInfoPlugin", targets: ["BuildInfoPlugin"]),
-        .executable(name: "BuildInfo", targets: ["BuildInfo"]),
+        .plugin(name: "packageBuildInfoPlugin", targets: ["PackageBuildInfoPlugin"]),
+        .executable(name: "packageBuildInfo", targets: ["PackageBuildInfo"]),
     ],
     targets: [
         .plugin(
-            name: "BuildInfoPlugin",
+            name: "PackageBuildInfoPlugin",
             capability: .buildTool(),
-            dependencies: ["BuildInfo"]
+            dependencies: ["PackageBuildInfo"]
         ),
-        .executableTarget(name: "BuildInfo"),
+        .executableTarget(name: "PackageBuildInfo"),
     ]
 )

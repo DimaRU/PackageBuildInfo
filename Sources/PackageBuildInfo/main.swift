@@ -4,7 +4,7 @@ main()
 
 func main() {
     if CommandLine.argc < 2 {
-        print("USAGE: buildInfo <git directory> [<output file>]")
+        print("USAGE: packageBuildInfo <git directory> [<output file>]")
         exit(1)
     }
     let gitDirectory = URL(fileURLWithPath: CommandLine.arguments[1])
