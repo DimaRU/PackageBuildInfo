@@ -1,0 +1,4 @@
+--exclude Pods,Carthage,Package.swift
+--rules fileHeader
+--swiftversion 5.5
+--header "/////\n////  {file}\n///   Copyright © {year} Dmitriy Borovikov. All rights reserved.\n//"

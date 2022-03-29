@@ -1,3 +1,8 @@
+/////
+////  GitInfo.swift
+///   Copyright © 2022 Dmitriy Borovikov. All rights reserved.
+//
+
 import Foundation
 
 final class GitInfoCoder {
