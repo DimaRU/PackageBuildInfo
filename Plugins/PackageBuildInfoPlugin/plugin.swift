@@ -10,7 +10,8 @@ import Foundation
 struct PackageBuildInfoPlugin: BuildToolPlugin {
     func createBuildCommands(context: PluginContext, target: Target) throws -> [Command] {
         func searchTool() -> String? {
-            let pathList = ProcessInfo.processInfo.environment["PATH"] ?? "/usr/local/bin"
+            let mintPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".mint/bin")
+            let pathList = (ProcessInfo.processInfo.environment["PATH"] ?? "/usr/local/bin") + ":\(mintPath.path)"
             
             for path in pathList.split(separator: ":") {
                 let url = URL(fileURLWithPath: String(path)).appendingPathComponent("packageBuildInfo")
@@ -25,7 +26,7 @@ struct PackageBuildInfoPlugin: BuildToolPlugin {
         
         guard let target = target as? SourceModuleTarget else { return [] }
         guard let tool = searchTool() else {
-            print("Please install PackageBuildInfo")
+            Diagnostics.error("Please install PackageBuildInfo")
             return []
         }
         let outputFile = context.pluginWorkDirectory.appending("packageBuildInfo.swift")
