@@ -13,9 +13,10 @@ final class GitInfoCoder {
     private struct GitInfo {
         var isDirty = true
         var date = ""
-        var count = "nil"
+        var count = "0"
         var branch = "nil"
-        var tag = "nil"
+        var countSince = "0"
+        var tag: String?
         var digest: String?
     }
 
@@ -65,16 +66,24 @@ final class GitInfoCoder {
     private func getInfo() throws -> GitInfo {
         var info = GitInfo()
 
+        info.date = "\(Date().timeIntervalSince1970)"
         var (exitCode, output) = try runGit(command: "status --porcelain -uno")
-        guard exitCode == 0, output.isEmpty else {
-            info.date = "\(Date().timeIntervalSince1970)"
+        guard exitCode == 0 else {
+            print("Warning: not a git repository")
             return info
         }
-        info.isDirty = false
-        (exitCode, output) = try runGit(command: "describe --exact-match --tags")
+        if output.isEmpty {
+            info.isDirty = false
+        }
+        (exitCode, output) = try runGit(command: "describe --tags --abbrev=0")
         if exitCode == 0, !output.isEmpty {
             info.tag = "\"\(output)\""
+            (exitCode, output) = try runGit(command: "rev-list \(output)..HEAD --count")
+            if exitCode == 0, !output.isEmpty {
+                info.countSince = output
+            }
         }
+        
         (exitCode, output) = try runGit(command: "branch --show-current")
         if exitCode == 0, !output.isEmpty {
             info.branch = "\"\(output)\""
@@ -113,23 +122,25 @@ final class GitInfoCoder {
         import Foundation
 
         public struct PackageBuildInfo {
-            let timeStamp: Date     // Time of dirty build
-            let timeZone: TimeZone  // Time Zone of dirty build
-            let isDirty: Bool       // Dirty build - git directory is't clean. In this case only timeStamp available
-            let count: Int?         // Commit count
+            let isDirty: Bool       // Dirty build - git directory is't clean.
+            let timeStamp: Date     // Time of last commit
+            let timeZone: TimeZone  // Time Zone
+            let count: Int          // Total commit count
             let tag: String?        // Tag, if exist
+            let countSince: Int     // Commit count since tag
             let branch: String?     // Git branch name
-            let digest: [UInt8]     // Commit sha1 digest (20 bytes)
+            let digest: [UInt8]     // Latest commit sha1 digest (20 bytes)
 
             var commit: String {
                 digest.reduce("") { $0 + String(format: "%02x", $1) }
             }
             static let current = PackageBuildInfo(
+                                      isDirty: \(info.isDirty ? "true" : "false"),
                                       timeStamp: Date(timeIntervalSince1970: \(info.date)),
                                       timeZone: TimeZone(secondsFromGMT: \(timeZone))!,
-                                      isDirty: \(info.isDirty ? "true" : "false"),
                                       count: \(info.count),
-                                      tag: \(info.tag),
+                                      tag: \(info.tag ?? "nil"),
+                                      countSince: \(info.countSince),
                                       branch: \(info.branch),
                                       digest: \(digestS))
         }
