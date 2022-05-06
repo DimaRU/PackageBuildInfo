@@ -121,7 +121,7 @@ final class GitInfoCoder {
         //
         import Foundation
 
-        public struct PackageBuildInfo {
+        public struct PackageBuild {
             let isDirty: Bool       // Dirty build - git directory is't clean.
             let timeStamp: Date     // Time of last commit
             let timeZone: TimeZone  // Time Zone
@@ -134,7 +134,7 @@ final class GitInfoCoder {
             var commit: String {
                 digest.reduce("") { $0 + String(format: "%02x", $1) }
             }
-            static let current = PackageBuildInfo(
+            static let info = PackageBuild(
                                       isDirty: \(info.isDirty ? "true" : "false"),
                                       timeStamp: Date(timeIntervalSince1970: \(info.date)),
                                       timeZone: TimeZone(secondsFromGMT: \(timeZone))!,
