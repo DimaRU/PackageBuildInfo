@@ -84,7 +84,7 @@ final class GitInfoCoder {
             }
         }
         
-        (exitCode, output) = try runGit(command: "branch --show-current")
+        (exitCode, output) = try runGit(command: "rev-parse --abbrev-ref HEAD")
         if exitCode == 0, !output.isEmpty {
             info.branch = "\"\(output)\""
         }
