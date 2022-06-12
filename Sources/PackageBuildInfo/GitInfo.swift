@@ -11,13 +11,13 @@ final class GitInfoCoder {
     private let outputFile: URL?
 
     private struct GitInfo {
-        var isDirty = true
-        var date = ""
+        var isDirty = "true"
+        var date = "\(Date().timeIntervalSince1970)"
         var count = "0"
         var branch = "nil"
         var countSince = "0"
-        var tag: String?
-        var digest: String?
+        var tag = "nil"
+        var digest = ""
     }
 
     init?(gitDirectory: URL, outputFile: URL?) {
@@ -66,14 +66,13 @@ final class GitInfoCoder {
     private func getInfo() throws -> GitInfo {
         var info = GitInfo()
 
-        info.date = "\(Date().timeIntervalSince1970)"
         var (exitCode, output) = try runGit(command: "status --porcelain -uno")
         guard exitCode == 0 else {
             print("Warning: not a git repository")
             return info
         }
         if output.isEmpty {
-            info.isDirty = false
+            info.isDirty = "false"
         }
         (exitCode, output) = try runGit(command: "describe --tags --abbrev=0")
         if exitCode == 0, !output.isEmpty {
@@ -103,9 +102,10 @@ final class GitInfoCoder {
     
     private func generateCode(_ info: GitInfo) -> String {
         let timeZone = TimeZone.current.secondsFromGMT()
+        var digest = info.digest
 
         var digestS = "["
-        if var digest = info.digest {
+        if !digest.isEmpty {
             for _ in 0..<digest.count / 2 {
                 digestS += "0x" + digest.prefix(2) + ", "
                 digest.removeFirst(2)
@@ -135,11 +135,11 @@ final class GitInfoCoder {
                 digest.reduce("") { $0 + String(format: "%02x", $1) }
             }
             static let info = PackageBuild(
-                                      isDirty: \(info.isDirty ? "true" : "false"),
+                                      isDirty: \(info.isDirty),
                                       timeStamp: Date(timeIntervalSince1970: \(info.date)),
                                       timeZone: TimeZone(secondsFromGMT: \(timeZone))!,
                                       count: \(info.count),
-                                      tag: \(info.tag ?? "nil"),
+                                      tag: \(info.tag),
                                       countSince: \(info.countSince),
                                       branch: \(info.branch),
                                       digest: \(digestS))
