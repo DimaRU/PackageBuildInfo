@@ -3,10 +3,8 @@ import PackageDescription
 
 let package = Package(
     name: "PackageBuildInfo",
-    platforms: [.macOS(.v11)],
     products: [
-        .plugin(name: "packageBuildInfoPlugin", targets: ["PackageBuildInfoPlugin"]),
-        .executable(name: "packageBuildInfo", targets: ["PackageBuildInfo"]),
+        .plugin(name: "PackageBuildInfoPlugin", targets: ["PackageBuildInfoPlugin"]),
     ],
     targets: [
         .plugin(
@@ -14,6 +12,6 @@ let package = Package(
             capability: .buildTool(),
             dependencies: ["PackageBuildInfo"]
         ),
-        .executableTarget(name: "PackageBuildInfo"),
+        .binaryTarget(name: "PackageBuildInfo", path: "Binaries/PackageBuildInfo.zip"),
     ]
 )
