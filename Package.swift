@@ -12,6 +12,6 @@ let package = Package(
             capability: .buildTool(),
             dependencies: ["PackageBuildInfo"]
         ),
-        .binaryTarget(name: "PackageBuildInfo", path: "Binaries/PackageBuildInfo.zip"),
+        .binaryTarget(name: "PackageBuildInfo", path: "Binaries/PackageBuildInfo.artifactbundle"),
     ]
 )
