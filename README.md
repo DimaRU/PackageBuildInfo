@@ -28,7 +28,7 @@ Using a new amazing feature - Swift Package Manager prebuild plugin, you can gen
 
 ```
 plugins: [
-    .plugin(name: "packageBuildInfoPlugin", package: "PackageBuildInfo")
+    .plugin(name: "PackageBuildInfoPlugin", package: "PackageBuildInfo")
 ]
 ```
 
