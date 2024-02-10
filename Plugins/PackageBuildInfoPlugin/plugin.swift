@@ -1,6 +1,6 @@
 /////
 ////  plugin.swift
-///   Copyright © 2022 Dmitriy Borovikov. All rights reserved.
+///   Copyright © 2024 Dmitriy Borovikov. All rights reserved.
 //
 
 import PackagePlugin
@@ -23,3 +23,21 @@ struct PackageBuildInfoPlugin: BuildToolPlugin {
         return [command]
     }
 }
+
+#if canImport(XcodeProjectPlugin)
+import XcodeProjectPlugin
+extension PackageBuildInfoPlugin: XcodeBuildToolPlugin {
+    func createBuildCommands(context: XcodeProjectPlugin.XcodePluginContext, target: XcodeProjectPlugin.XcodeTarget) throws -> [PackagePlugin.Command] {
+        let outputFile = context.pluginWorkDirectory.appending("packageBuildInfo.swift")
+        let command: Command = .prebuildCommand(
+            displayName:
+                "Generating \(outputFile.lastComponent) for \(context.xcodeProject.directory)",
+            executable:
+                try context.tool(named: "PackageBuildInfo").path,
+            arguments: [ "\(context.xcodeProject.directory)", "\(outputFile)" ],
+            outputFilesDirectory: context.pluginWorkDirectory
+        )
+        return [command]
+    }
+}
+#endif
