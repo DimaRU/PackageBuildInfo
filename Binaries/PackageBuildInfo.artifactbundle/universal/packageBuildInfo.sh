@@ -107,6 +107,7 @@ public struct PackageBuild {
     let countSinceTag: Int  // Commit count since tag
     let branch: String?     // Git branch name
     let digest: [UInt8]     // Latest commit sha1 digest (20 bytes)
+    let builtBy: String?    // Get the username of the user who built
 
     var commit: String {
         digest.reduce(\"\") { \$0 + String(format: \"%02x\", \$1) }
@@ -119,5 +120,6 @@ public struct PackageBuild {
                               tag: $tag,
                               countSinceTag: $countSinceTag,
                               branch: $branch,
-                              digest: $digestS)
+                              digest: $digestS,
+                              builtBy: \"${USER}\")
 }" >"$2"

@@ -3,7 +3,7 @@
   "artifacts": {
     "PackageBuildInfo": {
       "type": "executable",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "variants": [
         {
           "path": "universal/packageBuildInfo.sh",
