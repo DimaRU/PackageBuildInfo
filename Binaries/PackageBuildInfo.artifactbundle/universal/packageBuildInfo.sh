@@ -99,20 +99,20 @@ echo "/////
 import Foundation
 
 public struct PackageBuild {
-    let isDirty: Bool       // Dirty build - git directory is't clean.
-    let timeStamp: Date     // Time of last commit
-    let timeZone: TimeZone  // Time Zone
-    let count: Int          // Total commit count
-    let tag: String?        // Tag, if exist
-    let countSinceTag: Int  // Commit count since tag
-    let branch: String?     // Git branch name
-    let digest: [UInt8]     // Latest commit sha1 digest (20 bytes)
-    let builtBy: String?    // Get the username of the user who built
+    public let isDirty: Bool       // Dirty build - git directory is't clean.
+    public let timeStamp: Date     // Time of last commit
+    public let timeZone: TimeZone  // Time Zone
+    public let count: Int          // Total commit count
+    public let tag: String?        // Tag, if exist
+    public let countSinceTag: Int  // Commit count since tag
+    public let branch: String?     // Git branch name
+    public let digest: [UInt8]     // Latest commit sha1 digest (20 bytes)
+    public let builtBy: String?    // Get the username of the user who built
 
-    var commit: String {
+    public var commit: String {
         digest.reduce(\"\") { \$0 + String(format: \"%02x\", \$1) }
     }
-    static let info = PackageBuild(
+    public static let info = PackageBuild(
                               isDirty: $isDirty,
                               timeStamp: Date(timeIntervalSince1970: $date),
                               timeZone: TimeZone(secondsFromGMT: $timeZone) ?? TimeZone.current,
