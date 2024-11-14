@@ -98,7 +98,7 @@ echo "/////
 //
 import Foundation
 
-public struct PackageBuild {
+public struct PackageBuild: Sendable {
     public let isDirty: Bool       // Dirty build - git directory is't clean.
     public let timeStamp: Date     // Time of last commit
     public let timeZone: TimeZone  // Time Zone
